@@ -5,10 +5,11 @@ Right-click any image in Finder and convert it to WebP instantly.
 - ✅ Resizes so the longest side is max **2300px** (preserves aspect ratio)
 - ✅ Converts to **WebP at 90% quality**
 - ✅ Works on single files or **bulk selections**
-- ✅ Output saved **next to the original** file
 - ✅ Supports JPG, JPEG, PNG, TIFF, BMP, **HEIC, HEIF**
+- ✅ WebP files saved to a **timestamped subfolder** (e.g. `webp_2026-03-12_21-34-47/`)
+- ✅ Originals renamed with **`Unoptimized_`** prefix for easy identification
 - ✅ **macOS notification** when conversion completes
-- ✅ Won't overwrite existing `.webp` files
+- ✅ Safe to run multiple times — each batch gets its own folder
 
 ---
 
@@ -28,8 +29,9 @@ curl -fsSL https://raw.githubusercontent.com/gabevirnig/convert-to-webp/main/ins
 
 1. Select one or more images in Finder
 2. Right-click → **Quick Actions → Convert to WebP**
-3. The `.webp` file appears next to the original
-4. A notification confirms how many files were converted
+3. A `webp_YYYY-MM-DD_HH-MM-SS/` folder appears with your converted files
+4. The originals are renamed with an `Unoptimized_` prefix
+5. A notification confirms how many files were converted
 
 ![demo](demo.gif)
 

@@ -212,6 +212,13 @@ QUALITY=90
 CONVERTED=0
 SKIPPED=0
 
+# Create a timestamped output folder (one folder per batch)
+# Format: webp_2026-03-12_21-34-47
+TIMESTAMP=\$(date +"%Y-%m-%d_%H-%M-%S")
+FIRST_DIR=\$(dirname "\$1")
+WEBP_DIR="\$FIRST_DIR/webp_\$TIMESTAMP"
+mkdir -p "\$WEBP_DIR"
+
 for FILE in "\$@"; do
 
   # Normalize extension to lowercase for matching
@@ -222,6 +229,13 @@ for FILE in "\$@"; do
     jpg|jpeg|png|tiff|tif|bmp|heic|heif) ;;
     *) SKIPPED=\$((SKIPPED + 1)); continue ;;
   esac
+
+  # Skip files already prefixed with Unoptimized_
+  BASENAME=\$(basename "\$FILE")
+  if [[ "\$BASENAME" == Unoptimized_* ]]; then
+    SKIPPED=\$((SKIPPED + 1))
+    continue
+  fi
 
   # HEIC/HEIF: convert to temporary PNG first (sips handles Apple's format natively)
   if [[ "\$EXT" == "heic" || "\$EXT" == "heif" ]]; then
@@ -259,16 +273,17 @@ for FILE in "\$@"; do
     fi
   fi
 
-  # Output: same directory, same base name, .webp extension
-  # Avoid overwriting if a .webp already exists with the same name
-  OUTPUT="\${FILE%.*}.webp"
-  if [[ -f "\$OUTPUT" ]]; then
-    OUTPUT="\${FILE%.*}_converted.webp"
-  fi
+  # Output: same base name with .webp extension, inside the timestamped folder
+  NAMEONLY=\$(basename "\${FILE%.*}")
+  OUTPUT="\$WEBP_DIR/\$NAMEONLY.webp"
 
   # Convert (suppress cwebp stdout/stderr)
   if "\$CWEBP" -q "\$QUALITY" \$RESIZE "\$INPUT" -o "\$OUTPUT" &amp;>/dev/null; then
     CONVERTED=\$((CONVERTED + 1))
+
+    # Rename original file with Unoptimized_ prefix
+    DIR=\$(dirname "\$FILE")
+    mv "\$FILE" "\$DIR/Unoptimized_\$BASENAME"
   else
     SKIPPED=\$((SKIPPED + 1))
   fi
@@ -277,6 +292,11 @@ for FILE in "\$@"; do
   [[ -n "\$TMP_FILE" ]] &amp;&amp; rm -f "\$TMP_FILE"
 
 done
+
+# Remove the folder if nothing was converted (clean up empty dirs)
+if [[ "\$CONVERTED" -eq 0 ]]; then
+  rmdir "\$WEBP_DIR" 2>/dev/null || true
+fi
 
 # macOS notification with summary
 if [[ "\$CONVERTED" -gt 0 ]]; then
