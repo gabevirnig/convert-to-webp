@@ -17,7 +17,7 @@ Right-click any image in Finder and convert it to WebP instantly.
 Paste this into Terminal and hit Enter:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/gabevirnig/convert-to-webp/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/gabevirnig/convert-to-webp/main/install.sh -o /tmp/install-webp.sh && bash /tmp/install-webp.sh
 ```
 
 > **That's it.** The script will install Homebrew (if needed), install the `cwebp` encoder, and set up the right-click menu action automatically.
@@ -37,7 +37,7 @@ curl -fsSL https://raw.githubusercontent.com/gabevirnig/convert-to-webp/main/ins
 
 ## Doesn't show up after install?
 
-Relaunch Finder:
+**Step 1 — Relaunch Finder:**
 
 ```bash
 killall Finder
@@ -45,12 +45,42 @@ killall Finder
 
 Or: hold **Option** and right-click the Finder icon in your Dock → **Relaunch**.
 
+**Step 2 — Enable it from the right-click menu:**
+
+The Quick Action may be installed but not yet enabled. To turn it on:
+
+1. Right-click any file in Finder
+2. Go to **Quick Actions → Customize…**
+3. Check the box next to **Convert to WebP**
+
+It should appear in your Quick Actions menu immediately.
+
+**Step 3 — If it's not in Customize either:**
+
+On some macOS versions, Quick Actions are managed in System Settings:
+
+1. Open **System Settings → Privacy & Security → Extensions → Finder Extensions**
+2. Find **Convert to WebP** and make sure it's **enabled**
+3. Relaunch Finder (`killall Finder`)
+
+> On older macOS: **System Preferences → Extensions → Finder**.
+
+---
+
+## Update
+
+To update to the latest version, just run the install command again — it replaces the old version automatically:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/gabevirnig/convert-to-webp/main/install.sh -o /tmp/install-webp.sh && bash /tmp/install-webp.sh
+```
+
 ---
 
 ## Uninstall
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/gabevirnig/convert-to-webp/main/uninstall.sh | bash
+curl -fsSL https://raw.githubusercontent.com/gabevirnig/convert-to-webp/main/uninstall.sh -o /tmp/uninstall-webp.sh && bash /tmp/uninstall-webp.sh
 ```
 
 The uninstaller will also offer to remove `cwebp` if you no longer need it.
